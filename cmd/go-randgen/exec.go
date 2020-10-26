@@ -21,6 +21,7 @@ var dsn1 string
 var dsn2 string
 var order bool
 var dumpDir string
+var dsn2Hive string
 
 func newExecCmd() *cobra.Command {
 	execCmd := &cobra.Command{
@@ -49,6 +50,7 @@ func newExecCmd() *cobra.Command {
 		false, "compare sql result with order")
 	execCmd.Flags().StringVar(&dumpDir, "dump",
 		"dump", "inconsistent sqls dump directory")
+	execCmd.Flags().StringVar(&dsn2Hive, "dsn2hive", "", "hive query compare mysql dsn")
 
 	return execCmd
 }
@@ -139,6 +141,7 @@ func execAction(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Fatalf("connect dsn2 %s error %v\n", dsn2, err)
 	}
+	hiveCli := compare.OpenHive(dsn2Hive)
 
 	log.Println("Open DB ok, starting generate data in two db by ddls")
 
@@ -180,7 +183,9 @@ func execAction(cmd *cobra.Command, args []string) {
 
 	sqlIter := getIter(keyf)
 	err = sqlIter.Visit(sql_generator.FixedTimesVisitor(func(_ int, sql string) {
-		consistent, dsn1Res, dsn2Res := compare.BySql(sql, db1, db2, !order)
+		//consistent, dsn1Res, dsn2Res := compare.BySql(sql, db1, db2, !order)
+		consistent, dsn1Res, dsn2Res := compare.ByHiveSql(sql, db1, db2, hiveCli, !order)
+
 		if !consistent {
 			visitor(sql, dsn1Res, dsn2Res)
 		}

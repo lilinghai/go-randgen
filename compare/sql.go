@@ -5,13 +5,32 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"github.com/beltran/gohive"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/mattn/go-sqlite3"
 	"log"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
 )
+
+var OpenHive = func(hiveDsn string) *gohive.Connection {
+	host := strings.Split(hiveDsn, ":")[0]
+	port := strings.Split(hiveDsn, ":")[1]
+	portI, _ := strconv.Atoi(port)
+	configuration := gohive.NewConnectConfiguration()
+	// If it's not set it will be picked up from the logged user
+	configuration.Username = "root"
+	configuration.Database = "randgen"
+	// This may not be necessary
+	//configuration.Password = "myPassword"
+	connection, errConn := gohive.Connect(host, portI, "NONE", configuration)
+	if errConn != nil {
+		log.Fatal(errConn)
+	}
+	return connection
+}
 
 // OpenDBWithRetry opens a database specified by its database driver name and a
 // driver-specific Data source name. And it will do some retries if the connection fails.
