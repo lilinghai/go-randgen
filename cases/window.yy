@@ -55,17 +55,21 @@ lead_lag:
     LEAD(fieldA) OVER (pk_window_spec) AS 'lead1'
     | LEAD(fieldB, 2) OVER (pk_window_spec) AS 'lead2'
     | LEAD(fieldA, 3, NULL) OVER (pk_window_spec) AS 'lead3'
+    | LEAD(fieldA, 3, fieldA) OVER (pk_window_spec) AS 'lead3'
     | LAG(fieldA) OVER (pk_window_spec) AS 'lag1'
     | LAG(fieldB, 2) OVER (pk_window_spec) AS 'lag2'
     | LAG(fieldA, 3, NULL) OVER (pk_window_spec) AS 'lag3'
+    | LAG(fieldA, 3, fieldA) OVER (pk_window_spec) AS 'lag3'
 
 lead_lag_with_window_name:
     LEAD(fieldA) OVER window_name AS 'lead1'
     | LEAD(fieldB, 2) OVER window_name AS 'lead2'
     | LEAD(fieldA, 3, NULL) OVER window_name AS 'lead3'
+    | LEAD(fieldA, 3, fieldA) OVER window_name AS 'lead3'
     | LAG(fieldA) OVER window_name AS 'lag1'
     | LAG(fieldB, 2) OVER window_name AS 'lag2'
     | LAG(fieldA, 3, NULL) OVER window_name AS 'lag3'
+    | LAG(fieldA, 3, fieldA) OVER window_name AS 'lag3'
 
 pk_window_clause:
 	window_name AS (pk_window_spec)
