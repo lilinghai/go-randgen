@@ -122,12 +122,14 @@ like_operator:
     | not rlike like_operator_v
 
 like_operator_v:
-    const_str_value
-    | "A%"
+    "A%"
     | "a%"
     | "ABC"
     | "A*"
     | "a*"
+    | NULL
+    | '0'
+    | '1'
 
 in_operator:
     in ( in_operator_v )

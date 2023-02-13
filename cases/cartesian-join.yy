@@ -83,10 +83,20 @@ num_expression:
     | if(num_field,num_field,num_field)
     | common_field like common_value
     | common_field not like common_value
-    | common_field rlike common_value
-    | common_field not rlike common_value
+    | common_field rlike like_operator_v
+    | common_field not rlike like_operator_v
     | num_func(num_field)
     | strcmp(common_field,common_field)
+
+like_operator_v:
+    "A%"
+    | "a%"
+    | "ABC"
+    | "A*"
+    | "a*"
+    | NULL
+    | '0'
+    | '1'
 
 # 关联 expression
 associate_expression:
@@ -107,8 +117,8 @@ associate_expression:
     | if(t1. _field,common_field,common_field)
     | t1. _field like common_value
     | t1. _field not like common_value
-    | t1. _field rlike common_value
-    | t1. _field not rlike common_value
+    | t1. _field rlike like_operator_v
+    | t1. _field not rlike like_operator_v
     | num_func(t1. _field_int)
     | strcmp(t1. _field,common_field)
 
@@ -130,8 +140,8 @@ aggregation_expression:
     | if(x,common_field,common_field)
     | x like common_value
     | x not like common_value
-    | x rlike common_value
-    | x not rlike common_value
+    | x rlike like_operator_v
+    | x not rlike like_operator_v
     | num_func(x)
     | strcmp(x ,common_field)
 

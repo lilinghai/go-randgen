@@ -64,8 +64,8 @@ str_func3:
     | ltrim(expression)
     | ((expression) like (expression))
     | ((expression) not like (expression))
-    | ((expression) rlike (expression))
-    | ((expression) not rlike (expression))
+    | ((expression) rlike like_operator_v)
+    | ((expression) not rlike like_operator_v)
 
 num_func3:
     format(expression, little_param_random)
@@ -90,8 +90,18 @@ str_func2:
     | ltrim(column_values_str)
     | ((column_values_str) like (column_values_str))
     | ((column_values_str) not like (column_values_str))
-    | ((column_values_str) rlike (column_values_str))
-    | ((column_values_str) not rlike (column_values_str))
+    | ((column_values_str) rlike like_operator_v)
+    | ((column_values_str) not rlike like_operator_v)
+
+like_operator_v:
+    "A%"
+    | "a%"
+    | "ABC"
+    | "A*"
+    | "a*"
+    | NULL
+    | '0'
+    | '1'
 
 num_func2:
     format(column_values_str, little_param_random)
@@ -116,8 +126,8 @@ str_func:
     | ltrim(param_random)
     | (param_random like param_random)
     | (param_random not like param_random)
-    | (param_random rlike param_random)
-    | (param_random not rlike param_random)
+    | (param_random rlike like_operator_v)
+    | (param_random not rlike like_operator_v)
 
 num_func:
     format(param_random, little_param_random)

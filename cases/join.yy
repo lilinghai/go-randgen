@@ -178,7 +178,7 @@ str_func:
     | quote(field_random)
     | repeat(field_random,0)
     | reverse(field_random)
-    | field_random rlike value_random
+    | field_random rlike like_operator_v
     | rtrim(field_random)
     | space(field_random)
     | strcmp(field_random,value_random)
@@ -187,6 +187,16 @@ str_func:
     | ucase(field_random)
     | unhex(field_random)
     | upper(field_random)
+
+like_operator_v:
+    "A%"
+    | "a%"
+    | "ABC"
+    | "A*"
+    | "a*"
+    | NULL
+    | '0'
+    | '1'
 
 num_func:
     field_random operation field_random
