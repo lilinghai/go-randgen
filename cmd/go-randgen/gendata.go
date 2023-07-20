@@ -65,7 +65,7 @@ func gendataAction(cmd *cobra.Command, args []string) {
 			tableNames = append(tableNames, tableName)
 		}
 		for _, tn := range tableNames {
-			_, err := tiflashDb.Exec(fmt.Sprintf("ALTER TABLE %s SET TIFLASH REPLICA 1", tn))
+			_, err := tiflashDb.Exec(fmt.Sprintf("ALTER TABLE %s SET TIFLASH REPLICA 2", tn))
 			if err != nil {
 				log.Fatalln(err)
 			}

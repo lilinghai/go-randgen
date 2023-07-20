@@ -98,6 +98,7 @@ value_random_num:
     | _year
     | null
 
+# golang math.Mod 会返回 -0
 comparison_operation:
     =
     | >
@@ -106,7 +107,8 @@ comparison_operation:
     | >=
     | <=
     | !=
-    | <=>
+# NullEQInt not supported
+#    | <=>
 #    | /
     | %
 
@@ -123,7 +125,7 @@ condition_null:
     | if( _field_int,null,null)
     | if( _field_int ,_field_int,null)
     | _field_int is null
-    | _field_int comparison_operation null
+#    | _field_int comparison_operation null
 
 condition_in:
     _field in (null,2001,2001,2000,2000)
@@ -156,7 +158,7 @@ num_selection_expr:
     | condition_between
     | condition_in
     | condition_between
-#    | condition_null
+    | condition_null
 
 num_selection:
     num_selection_expr
@@ -175,7 +177,7 @@ having_exp:
     | agg_selection comparison_operation value_random_num
     | func_num agg_selection )
     | agg_selection is null
-    | agg_selection comparison_operation null
+#    | agg_selection comparison_operation null
     | agg_selection between 0 and 3
     | agg_selection in ("z","y",0)
     | agg_selection in ("y",2002,null)
