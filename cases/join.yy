@@ -50,8 +50,8 @@ operation:
 #    +
 #    | -
 #    | *
-    /
-    | %
+#    /
+     %
 #    | >>
 #    | <<
     | >
@@ -100,7 +100,7 @@ condition_null:
     | if(t1. _field,null,null)
     | if(t1. _field,t1. _field,null)
     | t1. _field is null
-    | t1. _field operation null
+#    | t1. _field operation null
 
 # t1. _field in (1,1,2,2,3,3) year bug
 condition_in:
@@ -223,5 +223,3 @@ common_func:
     | interval(t1. _field,"y",t1. _field,t1. _field)
     | interval(null,null)
     | isnull(t1. _field)
-    | isnull(t1. _field / t1. _field)
-

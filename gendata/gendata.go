@@ -203,6 +203,11 @@ func wrapInDml(pk string, data []string) string {
 const (
 	fInt = iota
 	fChar
+	fDecimal
+	fDatetime
+	fTimeStamp
+	fTime
+	fDate
 )
 
 var fClass = map[string]int{
@@ -218,6 +223,13 @@ var fClass = map[string]int{
 	"tinyint":   fInt,
 	"mediumint": fInt,
 	"bigint":    fInt,
+	"float":     fDecimal,
+	"double":    fDecimal,
+	"decimal":   fDecimal,
+	"datetime":  fDatetime,
+	"timestamp": fTimeStamp,
+	"time":      fTime,
+	"date":      fDate,
 }
 
 type Keyfun map[string]func() (string, error)
@@ -247,6 +259,12 @@ var field_invariant = ""
 func NewKeyfun(tables []*tableStmt, fields []*fieldExec) Keyfun {
 	fieldsInt := make([]*fieldExec, 0)
 	fieldsChar := make([]*fieldExec, 0)
+	fieldsDecimal := make([]*fieldExec, 0)
+	fieldsDatetime := make([]*fieldExec, 0)
+	fieldsDate := make([]*fieldExec, 0)
+	fieldsTimestamp := make([]*fieldExec, 0)
+	fieldsTime := make([]*fieldExec, 0)
+
 
 	for _, fieldExec := range fields {
 		if class, ok := fClass[fieldExec.dType()]; ok {
@@ -255,6 +273,16 @@ func NewKeyfun(tables []*tableStmt, fields []*fieldExec) Keyfun {
 				fieldsInt = append(fieldsInt, fieldExec)
 			case fChar:
 				fieldsChar = append(fieldsChar, fieldExec)
+			case fDecimal:
+				fieldsDecimal = append(fieldsDecimal, fieldExec)
+			case fDatetime:
+				fieldsDatetime = append(fieldsDatetime, fieldExec)
+			case fDate:
+				fieldsDate = append(fieldsDate, fieldExec)
+			case fTime:
+				fieldsTime = append(fieldsTime, fieldExec)
+			case fTimeStamp:
+				fieldsTimestamp = append(fieldsTimestamp, fieldExec)
 			}
 		}
 	}
@@ -296,6 +324,66 @@ func NewKeyfun(tables []*tableStmt, fields []*fieldExec) Keyfun {
 				return "", errors.New("there is no int fields")
 			}
 			return joinFields(fieldsInt), nil
+		},
+		"_field_decimal": func() (string, error) {
+			if len(fieldsDecimal) == 0 {
+				return "", errors.New("there is no decimal fields")
+			}
+			return "`" + fieldsDecimal[rand.Intn(len(fieldsDecimal))].name + "`", nil
+		},
+		"_field_decimal_list": func() (s string, e error) {
+			if len(fieldsDecimal) == 0 {
+				return "", errors.New("there is no decimal fields")
+			}
+			return joinFields(fieldsDecimal), nil
+		},
+		"_field_date": func() (string, error) {
+			if len(fieldsDate) == 0 {
+				return "", errors.New("there is no date fields")
+			}
+			return "`" + fieldsDate[rand.Intn(len(fieldsDate))].name + "`", nil
+		},
+		"_field_date_list": func() (s string, e error) {
+			if len(fieldsDate) == 0 {
+				return "", errors.New("there is no date fields")
+			}
+			return joinFields(fieldsDate), nil
+		},
+		"_field_datetime": func() (string, error) {
+			if len(fieldsDatetime) == 0 {
+				return "", errors.New("there is no datetime fields")
+			}
+			return "`" + fieldsDatetime[rand.Intn(len(fieldsDatetime))].name + "`", nil
+		},
+		"_field_datetime_list": func() (s string, e error) {
+			if len(fieldsDatetime) == 0 {
+				return "", errors.New("there is no datetime fields")
+			}
+			return joinFields(fieldsDatetime), nil
+		},
+		"_field_time": func() (string, error) {
+			if len(fieldsTime) == 0 {
+				return "", errors.New("there is no time fields")
+			}
+			return "`" + fieldsTime[rand.Intn(len(fieldsTime))].name + "`", nil
+		},
+		"_field_time_list": func() (s string, e error) {
+			if len(fieldsTime) == 0 {
+				return "", errors.New("there is no time fields")
+			}
+			return joinFields(fieldsTime), nil
+		},
+		"_field_timestamp": func() (string, error) {
+			if len(fieldsTimestamp) == 0 {
+				return "", errors.New("there is no timestamp fields")
+			}
+			return "`" + fieldsTimestamp[rand.Intn(len(fieldsTimestamp))].name + "`", nil
+		},
+		"_field_timestamp_list": func() (s string, e error) {
+			if len(fieldsTimestamp) == 0 {
+				return "", errors.New("there is no timestamp fields")
+			}
+			return joinFields(fieldsTimestamp), nil
 		},
 		"_field_char": func() (string, error) {
 			if len(fieldsChar) == 0 {
