@@ -62,7 +62,7 @@ var fieldFuncs = map[string]func(text string, fname string, ctx *fieldExec, z *Z
 		if text == "undef" {
 			return "", false, nil, nil
 		}
-		extraStmt := fmt.Sprintf("key (`%s`)", fname)
+		extraStmt := fmt.Sprintf("key (`%s`) /*T![global_index] GLOBAL */", fname)
 		return "", false, &extraStmt, nil
 	},
 	// "signed" is sign, other is "unsigned"

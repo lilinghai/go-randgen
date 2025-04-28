@@ -13,7 +13,7 @@ type Tables struct {
 }
 
 var tablesTmpl = mustParse("tables", "create table {{.tname}} (\n"+
-	"`pk` int primary key%s\n"+
+	"`pk` int primary key NONCLUSTERED global %s\n"+
 	") {{.charsets}} {{.partitions}}")
 
 // support vars
@@ -57,7 +57,19 @@ var tableFuncs = map[string]func(string, *tableStmt) (string, error){
 		if err != nil {
 			return "", err
 		}
-		return fmt.Sprintf("\npartition by hash(pk)\npartitions %d", num), nil
+		// PARTITION BY RANGE ( YEAR(separated) ) (
+		// 	PARTITION p0 VALUES LESS THAN (1991),
+		// 	PARTITION p1 VALUES LESS THAN (1996),
+		// 	PARTITION p2 VALUES LESS THAN (2001),
+		// 	PARTITION p3 VALUES LESS THAN MAXVALUE
+		// );
+		res := "PARTITION BY RANGE (col_int_key_signed) ( "
+		for i := 0; i < num; i++ {
+			res += fmt.Sprintf("PARTITION p%d VALUES LESS THAN (%d),", i, i*10)
+		}
+		res += fmt.Sprintf("PARTITION p%d VALUES LESS THAN MAXVALUE )", num)
+		// return fmt.Sprintf("\npartition by hash(col_int_key_signed)\npartitions %d", num), nil
+		return res, nil
 	},
 }
 

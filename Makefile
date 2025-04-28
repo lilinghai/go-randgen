@@ -24,4 +24,7 @@ push_image:
 darwin: # cross compile to mac
 	GOOS=darwin GOARCH=amd64 go build -o go-randgen-darwin cmd/go-randgen/*.go
 
+linux:
+	GOOS=linux GOARCH=amd64 go build -o go-randgen-linux cmd/go-randgen/*.go
+
 .PHONY: all resource bin test debug darwin build_image push_image
