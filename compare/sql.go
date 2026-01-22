@@ -74,6 +74,7 @@ func (s *SqlResult) NonOrderEqualTo(another *SqlResult, ci bool) bool {
 		for row := range another.Rows {
 			_, ok := rowsTmp[strings.ToLower(row)]
 			if !ok {
+				log.Printf("CI compare ERROR not found row %s\n", row)
 				return false
 			}
 		}
@@ -81,6 +82,7 @@ func (s *SqlResult) NonOrderEqualTo(another *SqlResult, ci bool) bool {
 	}
 	for row := range another.Rows {
 		if !s.Contains(row) {
+			log.Printf("compare ERROR not found row %s\n", row)
 			return false
 		}
 	}
